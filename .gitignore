@@ -1,4 +1,11 @@
 # =====================
+# Root Node (scripts, concurrently)
+# =====================
+node_modules/
+npm-debug.log
+.env
+
+# =====================
 # Node Backend
 # =====================
 backend/node_modules/
