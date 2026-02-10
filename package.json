@@ -1,0 +1,17 @@
+{
+  "name": "flashfood",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "front": "cd frontend && flutter run -d chrome",
+    "back": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run back\" \"npm run front\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

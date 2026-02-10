@@ -1,0 +1,27 @@
+# =====================
+# Node Backend
+# =====================
+backend/node_modules/
+backend/npm-debug.log
+backend/.env
+
+# =====================
+# Flutter Frontend
+# =====================
+frontend/.dart_tool/
+frontend/.packages
+frontend/.pub-cache/
+frontend/.pub/
+frontend/build/
+
+# =====================
+# IDE
+# =====================
+.vscode/
+.idea/
+
+# =====================
+# OS
+# =====================
+.DS_Store
+Thumbs.db
