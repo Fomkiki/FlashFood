@@ -1,4 +1,5 @@
-## Install
+## Install Root
+npm install
 
 ### Backend
 cd backend
