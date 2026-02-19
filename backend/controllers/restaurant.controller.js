@@ -1,3 +1,4 @@
+import e from "express";
 import * as restaurantModel from "../models/restaurant.model.js";
 
 export const registerRestaurant = async (req, res) => {
@@ -26,6 +27,16 @@ export const getRestaurantById = async (req, res) => {
         res.status(500).json({message: err.message});
     }
 };
+
+export const getAllRestaurants = async (req, res) => {
+    try{
+        const restaurants = await restaurantModel.getAllRestaurants(req.user.id);
+        res.status(200).json({ restaurants });
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+}
 
 
 export const editRestaurant = async (req, res) => {
