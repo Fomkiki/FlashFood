@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/reg_restaurant_page.dart';
 
 import 'profile_page.dart';
 import 'home_page.dart';
@@ -16,7 +17,7 @@ class _MainPageState extends State<MainPage> {
   final pages = [
     const HomePage(),
     const ProfilePage(),
-    const Placeholder(),
+    const RegRestaurantPage(),
     const Placeholder(),
   ];
 
@@ -34,6 +35,10 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person_2_outlined),
             label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.store_mall_directory_outlined),
+            label: 'Reg_Restaurant',
           ),
         ],
       ),
