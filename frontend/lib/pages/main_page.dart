@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../pages/test_page.dart';
+import 'test_page.dart';
+import 'profile_page.dart';
+import 'home_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -13,8 +15,8 @@ class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
 
   final pages = [
-    const TestPage(),
-    const Placeholder(),
+    const HomePage(),
+    const ProfilePage(),
     const Placeholder(),
     const Placeholder(),
   ];
