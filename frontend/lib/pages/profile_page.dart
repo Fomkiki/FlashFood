@@ -60,10 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
         },
-        body: jsonEncode({
-          "username": newUsername,
-          "address": newAddress,
-        }),
+        body: jsonEncode({"username": newUsername, "address": newAddress}),
       );
 
       if (res.statusCode == 200) {
@@ -87,9 +84,9 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (e) {
       print('Error: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -139,9 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
               if (usernameController.text.isEmpty ||
                   addressController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please fill in all fields'),
-                  ),
+                  const SnackBar(content: Text('Please fill in all fields')),
                 );
               } else {
                 updateProfile(usernameController.text, addressController.text);
@@ -226,7 +221,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 30),
+
+                    if (user?['role'] == 'restaurant') ...[
+                      const SizedBox(height: 15),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/owner_res');
+                        },
+                        child: const Text('My Restaurants'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 15),
                     // Edit Profile Button
                     ElevatedButton.icon(
                       onPressed: showEditDialog,

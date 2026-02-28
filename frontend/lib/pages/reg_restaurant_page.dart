@@ -18,11 +18,11 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
 
-  String? selectedZone;
+  String? selectedStatus;
   Uint8List? selectedImageBytes;
   bool isLoading = false;
 
-  final List<String> zones = ['Zone 1', 'Zone 2', 'Zone 3'];
+  final List<String> status = ['open', 'close'];
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImage() async {
@@ -52,14 +52,13 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
       "name_res": nameController.text,
       "open_time": openController.text,
       "close_time": closeController.text,
-      "zone": selectedZone ?? "",
+      "status_res": selectedStatus ?? "",
       "phone": phoneController.text,
       "address": addressController.text,
     };
 
     final service = RestaurantService();
 
-    // ส่ง bytes แทน File
     final success = await service.registerRestaurant(
       fields,
       selectedImageBytes!,
@@ -89,6 +88,16 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
           key: _formKey,
           child: ListView(
             children: [
+              selectedImageBytes != null
+                  ? Image.memory(selectedImageBytes!, height: 150)
+                  : const Text('No image selected'),
+
+              TextButton(
+                onPressed: pickImage,
+                child: const Text('Select Image'),
+              ),
+
+              const SizedBox(height: 20),
               TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -119,24 +128,6 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
               ),
               const SizedBox(height: 16),
 
-              DropdownButtonFormField<String>(
-                value: selectedZone,
-                decoration: const InputDecoration(
-                  labelText: 'Zone',
-                  border: OutlineInputBorder(),
-                ),
-                items: zones
-                    .map(
-                      (zone) =>
-                          DropdownMenuItem(value: zone, child: Text(zone)),
-                    )
-                    .toList(),
-                onChanged: (value) => setState(() => selectedZone = value),
-                validator: (value) =>
-                    value == null ? 'Please select a zone' : null,
-              ),
-              const SizedBox(height: 16),
-
               TextFormField(
                 controller: phoneController,
                 decoration: const InputDecoration(
@@ -153,24 +144,38 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
-              selectedImageBytes != null
-                  ? Image.memory(selectedImageBytes!, height: 150)
-                  : const Text('No image selected'),
-
-              TextButton(
-                onPressed: pickImage,
-                child: const Text('Select Image'),
+              DropdownButtonFormField<String>(
+                value: selectedStatus,
+                decoration: const InputDecoration(
+                  labelText: 'status of Restaurant',
+                  border: OutlineInputBorder(),
+                ),
+                items: status
+                    .map(
+                      (status) =>
+                          DropdownMenuItem(value: status, child: Text(status)),
+                    )
+                    .toList(),
+                onChanged: (value) => setState(() => selectedStatus = value),
+                validator: (value) =>
+                    value == null ? 'Please select a status' : null,
               ),
-
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               ElevatedButton(
                 onPressed: isLoading ? null : submitForm,
                 child: isLoading
                     ? const CircularProgressIndicator()
                     : const Text('Submit'),
+                style: ElevatedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
               ),
             ],
           ),

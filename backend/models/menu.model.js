@@ -34,3 +34,9 @@ export const updateMenu = async(data) => {
     const [result] = await db.query(sql,[name_menu, price, note , category, img_url , menuId, id_res]);
     return result;
 }
+
+export const getAllMenu = async(id_res) => {
+    const sql = "SELECT * FROM menu WHERE id_res = ?";
+    const [rows] = await db.query(sql, [id_res]);
+    return rows;
+}

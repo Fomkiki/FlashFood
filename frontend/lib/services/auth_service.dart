@@ -22,22 +22,28 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> login(Map<String, dynamic> data) async {
-    final url = Uri.parse("$baseUrl/login");
+  final url = Uri.parse("$baseUrl/login");
+
+  try {
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(data),
     );
 
+    final body = json.decode(response.body);
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
-      ;
+      return body;
     } else {
-      print(response.body);
-      return {};
+      throw Exception(body["message"] ?? "Login failed");
     }
+  } catch (e) {
+    throw Exception("Error: $e");
   }
 }
+}
+
 
 Future<Map<String, dynamic>> getUserData(String token) async {
   final url = Uri.parse("http://localhost:5000/api/auth/me");

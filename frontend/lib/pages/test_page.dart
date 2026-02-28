@@ -32,7 +32,7 @@ class _TestPageState extends State<TestPage> {
     final data = jsonDecode(res.body);
 
     setState(() {
-      user = data["user"][0]; // 🔑 สำคัญ
+      user = data["user"][0]; 
       isLoading = false;
     });
   }

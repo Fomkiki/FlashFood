@@ -2,10 +2,10 @@ import e from "express";
 import db from "../config/db.js";
 
 export const createRestaurant = async(data) => {
-    const {name_res , open_time, close_time , zone, phone, address, img_url , id_users} = data;
-    const sql = "INSERT INTO restaurant (name_res, open_time, close_time, zone, phone, address, img_url, id_users) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const {name_res , open_time, close_time , status_res, phone, address, img_url , id_users} = data;
+    const sql = "INSERT INTO restaurant (name_res, open_time, close_time, status_res , phone, address, img_url, id_users) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     updateRole(id_users);
-    const [result] = await db.query(sql, [name_res , open_time, close_time , zone, phone, address, img_url , id_users]);
+    const [result] = await db.query(sql, [name_res , open_time, close_time , status_res, phone, address, img_url , id_users]);
     return result.insertId;
 };
 
@@ -29,15 +29,16 @@ export const getAllRestaurants = async (id_users) => {
 
 
 export const updateRestaurant = async (id, data) => {
-    const {name_res , open_time, close_time , zone, phone, address, img_url , id_users} = data;
+    const {name_res , open_time, close_time , zone, phone, address, img_url , id_users , status_res} = data;
     const sql = `UPDATE restaurant SET name_res = COALESCE(?, name_res), 
                 open_time = COALESCE(?, open_time), 
                 close_time = COALESCE(?, close_time), 
                 zone = COALESCE(?, zone), 
                 phone = COALESCE(?, phone), 
                 address = COALESCE(?, address), 
-                img_url = COALESCE(?, img_url) 
+                img_url = COALESCE(?, img_url),
+                status_res = COALESCE(?, status_res)
                 WHERE id = ? AND id_users = ?`;
-    const [result] = await db.query(sql, [name_res , open_time, close_time , zone, phone, address, img_url , id, id_users]);
+    const [result] = await db.query(sql, [name_res , open_time, close_time , zone, phone, address, img_url , status_res , id, id_users ]);
     return result;
 }
