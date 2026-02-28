@@ -41,3 +41,21 @@ export const updateRestaurant = async (id, data) => {
     const [result] = await db.query(sql, [name_res , open_time, close_time , zone, phone, address, img_url , id, id_users]);
     return result;
 }
+
+export const getRestaurantsForUsers = async () => {
+    const sql = "SELECT id, name_res, open_time, close_time, zone, phone, address, img_url, status_reg FROM restaurant WHERE status_reg = ?";
+    const [rows] = await db.query(sql, ['success']);
+    return rows;
+};
+
+export const getAllRestaurantsAdmin = async () => {
+    const sql = "SELECT id, name_res, phone, address, status_reg, id_users, img_url, open_time, close_time FROM restaurant ORDER BY id DESC";
+    const [rows] = await db.query(sql);
+    return rows;
+};
+
+export const updateRestaurantStatus = async (id, status) => {
+    const sql = "UPDATE restaurant SET status_reg = ? WHERE id = ?";
+    const [result] = await db.query(sql, [status, id]);
+    return result;
+};

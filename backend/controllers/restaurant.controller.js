@@ -58,3 +58,45 @@ export const editRestaurant = async (req, res) => {
         res.status(500).json({message: err.message});
     }
 };
+
+export const getRestaurantsForUsers = async (req, res) => {
+    try{
+        const restaurants = await restaurantModel.getRestaurantsForUsers();
+        res.status(200).json({ restaurants });
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+};
+
+export const getAllRestaurantsAdmin = async (req, res) => {
+    try{
+        const restaurants = await restaurantModel.getAllRestaurantsAdmin();
+        res.status(200).json({ restaurants });
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+};
+
+export const updateRestaurantStatus = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!['waiting_approve', 'success','not_approve'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
+        
+        const result = await restaurantModel.updateRestaurantStatus(id, status);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Restaurant not found' });
+        }
+        
+        res.status(200).json({ message: 'Restaurant status updated successfully' });
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+};

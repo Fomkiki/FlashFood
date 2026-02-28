@@ -54,3 +54,35 @@ export const logoutUser = (req, res) => {
   res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: "strict" });
   res.status(200).json({ message: "Logout successful" });
 };
+
+export const updateUser = async (req, res) => {
+  try {
+    const { username, address, phone } = req.body;
+    const userId = req.user.id;
+
+    if (!username || !address || !phone) {
+      return res.status(400).json({ message: "Username, address, and phone are required" });
+    }
+
+    const result = await userModel.updateUser(userId, username, address, phone);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User updated successfully" });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getAllUsersAdmin = async (req, res) => {
+  try {
+    const users = await userModel.getAllUsers();
+    res.status(200).json({ users });
+  } catch (err) {
+    console.error("GetAllUsers error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

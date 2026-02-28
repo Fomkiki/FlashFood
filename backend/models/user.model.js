@@ -20,3 +20,15 @@ export const getUserById = async(id) => {
     const [row] = await db.query(sql, [id]);
     return row;
 }
+
+export const updateUser = async(id, username, address, phone) => {
+    const sql = "UPDATE users SET username = ?, address = ?, phone = ? WHERE id = ?";
+    const [result] = await db.query(sql, [username, address, phone, id]);
+    return result;
+}
+
+export const getAllUsers = async () => {
+    const sql = "SELECT id, username, email, phone, address, role FROM users ORDER BY id DESC";
+    const [rows] = await db.query(sql);
+    return rows;
+}

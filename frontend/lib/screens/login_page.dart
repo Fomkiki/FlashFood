@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -106,7 +108,28 @@ class _LoginPageState extends State<LoginPage> {
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setString("token", token);
 
-                    Navigator.pushReplacementNamed(context, "/main");
+                    // Get user info to check role
+                    try {
+                      final userRes = await http.get(
+                        Uri.parse("http://localhost:5000/api/auth/me"),
+                        headers: {"Authorization": "Bearer $token"},
+                      );
+
+                      if (userRes.statusCode == 200) {
+                        final userData = jsonDecode(userRes.body);
+                        final userRole = userData["user"][0]["role"];
+
+                        if (userRole == 'admin') {
+                          Navigator.pushReplacementNamed(context, "/admin");
+                        } else {
+                          Navigator.pushReplacementNamed(context, "/main");
+                        }
+                      } else {
+                        Navigator.pushReplacementNamed(context, "/main");
+                      }
+                    } catch (e) {
+                      Navigator.pushReplacementNamed(context, "/main");
+                    }
                   } else {
                     const snackBar = SnackBar(content: Text("Login failed"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);

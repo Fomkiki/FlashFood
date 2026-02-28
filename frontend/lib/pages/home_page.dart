@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'menu_page.dart';
 
@@ -32,12 +31,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchRestaurants() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-
       final res = await http.get(
-        Uri.parse("http://localhost:5000/api/restaurant"),
-        headers: {"Authorization": "Bearer $token"},
+        Uri.parse("http://localhost:5000/api/restaurant/user/all"),
       );
 
       if (res.statusCode == 200) {
