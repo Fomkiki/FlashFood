@@ -16,12 +16,14 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
   late TextEditingController usernameController;
   late TextEditingController addressController;
+  late TextEditingController phoneController;
 
   @override
   void initState() {
     super.initState();
     usernameController = TextEditingController();
     addressController = TextEditingController();
+    phoneController = TextEditingController();
     fetchUser();
   }
 
@@ -29,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void dispose() {
     usernameController.dispose();
     addressController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 
@@ -49,7 +52,11 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Future<void> updateProfile(String newUsername, String newAddress) async {
+  Future<void> updateProfile(
+    String newUsername,
+    String newAddress,
+    String newPhone,
+  ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -60,14 +67,18 @@ class _ProfilePageState extends State<ProfilePage> {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
         },
-        body: jsonEncode({"username": newUsername, "address": newAddress}),
+        body: jsonEncode({
+          "username": newUsername,
+          "address": newAddress,
+          "phone": newPhone,
+        }),
       );
 
       if (res.statusCode == 200) {
-        final data = jsonDecode(res.body);
         setState(() {
           user?['username'] = newUsername;
           user?['address'] = newAddress;
+          user?['phone'] = newPhone;
         });
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -94,6 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void showEditDialog() {
     usernameController.text = user?['username'] ?? '';
     addressController.text = user?['address'] ?? '';
+    phoneController.text = user?['phone'] ?? '';
 
     showDialog(
       context: context,
@@ -110,6 +122,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 prefixIcon: const Icon(Icons.person),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: phoneController,
+              decoration: InputDecoration(
+                labelText: 'Phone',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                prefixIcon: const Icon(Icons.phone),
               ),
             ),
             const SizedBox(height: 16),
@@ -134,12 +157,17 @@ class _ProfilePageState extends State<ProfilePage> {
           ElevatedButton(
             onPressed: () {
               if (usernameController.text.isEmpty ||
-                  addressController.text.isEmpty) {
+                  addressController.text.isEmpty ||
+                  phoneController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please fill in all fields')),
                 );
               } else {
-                updateProfile(usernameController.text, addressController.text);
+                updateProfile(
+                  usernameController.text,
+                  addressController.text,
+                  phoneController.text,
+                );
                 Navigator.pop(context);
               }
             },
@@ -165,116 +193,134 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 30),
-                    // Profile Picture (Default Image)
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey[300],
-                      child: Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Username
-                    Text(
-                      user?['username'] ?? 'N/A',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Phone
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.phone, color: Colors.blue),
-                        const SizedBox(width: 10),
-                        Text(
-                          user?['phone'] ?? 'N/A',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    // Location/Address
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.location_on, color: Colors.red),
-                        const SizedBox(width: 10),
-                        Flexible(
-                          child: Text(
-                            user?['address'] ?? 'N/A',
-                            style: const TextStyle(fontSize: 16),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    if (user?['role'] == 'restaurant') ...[
-                      const SizedBox(height: 15),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/owner_res');
-                        },
-                        child: const Text('My Restaurants'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 15),
-                    // Edit Profile Button
-                    ElevatedButton.icon(
-                      onPressed: showEditDialog,
-                      icon: const Icon(Icons.edit),
-                      label: const Text('Edit Profile'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
-                          vertical: 12,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    // Logout Button
-                    ElevatedButton.icon(
-                      onPressed: logout,
-                      icon: const Icon(Icons.logout),
-                      label: const Text('Logout'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
-                          vertical: 12,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 30),
+              // Profile Picture (Default Image)
+              CircleAvatar(
+                radius: 60,
+                backgroundColor: Colors.grey[300],
+                child: Icon(Icons.person, size: 60, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 20),
+              // Username
+              Text(
+                user?['username'] ?? 'N/A',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+              const SizedBox(height: 20),
+              // Phone
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.phone, color: Colors.blue),
+                  const SizedBox(width: 10),
+                  Text(
+                    user?['phone'] ?? 'N/A',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              // Location/Address
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.location_on, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      user?['address'] ?? 'N/A',
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 15),
+              // Role
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: user?['role'] == 'restaurant'
+                      ? Colors.orange[100]
+                      : Colors.blue[100],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Role: ${user?['role'] ?? 'N/A'}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: user?['role'] == 'restaurant'
+                        ? Colors.orange[800]
+                        : Colors.blue[800],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              if (user?['role'] == 'restaurant') ...[
+                const SizedBox(height: 15),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/owner_res');
+                  },
+                  child: const Text('My Restaurants'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange[800],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ],
+              // Edit Profile Button
+              ElevatedButton.icon(
+                onPressed: showEditDialog,
+                icon: const Icon(Icons.edit),
+                label: const Text('Edit Profile'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              // Logout Button
+              ElevatedButton.icon(
+                onPressed: logout,
+                icon: const Icon(Icons.logout),
+                label: const Text('Logout'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

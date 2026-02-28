@@ -7,6 +7,7 @@ import 'pages/test_page.dart';
 import 'pages/reg_restaurant_page.dart';
 import 'screens/owner_res_page.dart';
 import 'pages/edit_res_page.dart';
+import 'pages/admin_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/main': (context) => const MainPage(),
+        '/admin': (context) => const AdminController(),
         '/test': (context) => const TestPage(),
         '/reg_restaurant': (context) => const RegRestaurantPage(),
         '/owner_res': (context) => const OwnerResPage(),

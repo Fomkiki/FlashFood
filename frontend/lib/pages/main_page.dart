@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/reg_restaurant_page.dart';
 
-import 'test_page.dart';
 import 'profile_page.dart';
 import 'home_page.dart';
 
