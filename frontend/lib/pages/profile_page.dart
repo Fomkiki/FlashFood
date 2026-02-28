@@ -268,9 +268,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 15),
               if (user?['role'] == 'restaurant') ...[
-                const SizedBox(height: 15),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/owner_res');
@@ -288,6 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 15),
               ],
               // Edit Profile Button
               ElevatedButton.icon(

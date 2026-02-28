@@ -13,11 +13,16 @@ class OwnerResPage extends StatefulWidget {
 class _OwnerResPageState extends State<OwnerResPage> {
   late Future<List<dynamic>> Restaurants;
 
+  void loadRestaurants() {
+    setState(() {
+      Restaurants = RestaurantService().ownerRes();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-
-    Restaurants = RestaurantService().ownerRes();
+    loadRestaurants();
   }
 
   @override
@@ -54,14 +59,16 @@ class _OwnerResPageState extends State<OwnerResPage> {
                 ),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
                             MainResPage(restaurant: res, ImgUrl: fullImageUrl),
                       ),
                     );
+
+                    loadRestaurants();
                   },
                   child: Row(
                     children: [
