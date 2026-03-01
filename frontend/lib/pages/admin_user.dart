@@ -34,14 +34,13 @@ class _AdminUserState extends State<AdminUser> {
         final data = jsonDecode(res.body);
         setState(() {
           users = List<Map<String, dynamic>>.from(data['users'] ?? []);
+          users.sort((a, b) => (a['id'] as int).compareTo(b['id'] as int));
           isLoading = false;
         });
       } else {
         setState(() => isLoading = false);
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to fetch users')));
       }
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
       setState(() => isLoading = false);
     }
   }
@@ -69,10 +68,11 @@ class _AdminUserState extends State<AdminUser> {
                     return Card(
                       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: ListTile(
-                        title: Text('Username: ${u['username'] ?? 'N/A'}'),
-                        subtitle: Row(
+                        title: Text('ID: ${u['id']}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('ID: ${u['id'] ?? '-'}'),
+                            Text('Username: ${u['username'] ?? 'N/A'}'),
                             Text('Email: ${u['email'] ?? 'N/A'}'),
                             Text('Phone: ${u['phone'] ?? 'N/A'}'),
                             Text('Address: ${u['address'] ?? 'N/A'}'),
