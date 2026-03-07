@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frontend/services/api_service.dart';
 import 'admin_restaurant_status.dart';
 import 'admin_user.dart';
 
@@ -7,8 +7,7 @@ class AdminController extends StatelessWidget {
   const AdminController({super.key});
 
   Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await ApiService.clearAuthData();
     if (context.mounted) {
       Navigator.of(context).pushReplacementNamed('/login');
     }

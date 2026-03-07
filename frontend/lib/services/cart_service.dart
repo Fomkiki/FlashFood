@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api_service.dart';
 
 class CartService {
   final baseUrl = "http://10.0.2.2:5000/api/cart";
@@ -81,6 +82,32 @@ class CartService {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<void> addToCart({required int menuId, required int amount}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final headers = {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    };
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/add/$menuId'),
+      headers: headers,
+      body: jsonEncode({'amount': amount}),
+    );
+
+    if (response.statusCode == 201) {
+      return;
+    }
+
+    try {
+      final body = jsonDecode(response.body);
+      throw Exception(body['message'] ?? 'Failed to add to cart');
+    } catch (_) {
+      throw Exception('Failed to add to cart');
     }
   }
 }

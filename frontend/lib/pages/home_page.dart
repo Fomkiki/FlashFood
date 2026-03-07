@@ -14,6 +14,7 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> restaurants = [];
   List<dynamic> filteredRestaurants = [];
   bool isLoading = true;
+  bool showAll = false;
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage> {
         final data = jsonDecode(res.body);
         setState(() {
           restaurants = data["restaurants"] ?? [];
-          filteredRestaurants = restaurants;
+          _filterRestaurants();
           isLoading = false;
         });
       } else {
@@ -54,15 +55,25 @@ class _HomePageState extends State<HomePage> {
   void _filterRestaurants() {
     final query = searchController.text.toLowerCase();
     setState(() {
-      if (query.isEmpty) {
-        filteredRestaurants = restaurants;
-      } else {
-        filteredRestaurants = restaurants
+      var filtered = restaurants;
+
+      // Filter by status_res if showAll is false
+      if (!showAll) {
+        filtered = filtered
+            .where((res) => res['status_res'] == 'open')
+            .toList();
+      }
+
+      // Filter by search query
+      if (query.isNotEmpty) {
+        filtered = filtered
             .where(
               (res) => res['name_res'].toString().toLowerCase().contains(query),
             )
             .toList();
       }
+
+      filteredRestaurants = filtered;
     });
   }
 
@@ -91,6 +102,24 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                // Show All Checkbox
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: showAll,
+                        onChanged: (value) {
+                          setState(() {
+                            showAll = value ?? false;
+                            _filterRestaurants();
+                          });
+                        },
+                      ),
+                      const Text('Show all restaurants'),
+                    ],
+                  ),
+                ),
                 // Restaurant List
                 Expanded(
                   child: filteredRestaurants.isEmpty
@@ -116,17 +145,18 @@ class RestaurantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MenuPage(restaurant: restaurant),
-          ),
-        );
-      },
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MenuPage(restaurant: restaurant),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -135,12 +165,13 @@ class RestaurantCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
-                  width: 80,
-                  height: 80,
+                  width: 100,
+                  height: 100,
                   color: Colors.grey[300],
                   child: restaurant['img_url'] != null
                       ? Image.network(
-                          restaurant['img_url'],
+                          'http://localhost:5000/${restaurant['img_url']}'
+                              .replaceAll('\\', '/'),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Icon(
@@ -165,7 +196,7 @@ class RestaurantCard extends StatelessWidget {
                   children: [
                     // Restaurant Name
                     Text(
-                      restaurant['name_res'] ?? 'N/A',
+                      restaurant['name_res'],
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -174,7 +205,7 @@ class RestaurantCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    // Zone
+                    // Address
                     Row(
                       children: [
                         const Icon(
@@ -183,11 +214,15 @@ class RestaurantCard extends StatelessWidget {
                           color: Colors.grey,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          restaurant['zone'] ?? 'N/A',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
+                        Expanded(
+                          child: Text(
+                            restaurant['address'],
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -203,10 +238,46 @@ class RestaurantCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${restaurant['open_time'] ?? 'N/A'} - ${restaurant['close_time'] ?? 'N/A'}',
+                          '${restaurant['open_time']} - ${restaurant['close_time']}',
                           style: const TextStyle(fontSize: 12),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 4),
+                    // Phone
+                    Row(
+                      children: [
+                        const Icon(Icons.phone, size: 14, color: Colors.grey),
+                        const SizedBox(width: 4),
+                        Text(
+                          restaurant['phone'],
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    // Status
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: restaurant['status_res'] == 'open'
+                            ? Colors.green.withOpacity(0.2)
+                            : Colors.red.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        restaurant['status_res']?.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: restaurant['status_res'] == 'open'
+                              ? Colors.green[700]
+                              : Colors.red[700],
+                        ),
+                      ),
                     ),
                   ],
                 ),
