@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frontend/services/api_service.dart';
 import 'package:http/http.dart' as http;
 
 class AdminUser extends StatefulWidget {
@@ -22,12 +22,9 @@ class _AdminUserState extends State<AdminUser> {
 
   Future<void> fetchUsers() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-
       final res = await http.get(
         Uri.parse('http://localhost:5000/api/auth/admin/users'),
-        headers: {"Authorization": "Bearer $token"},
+        headers: await ApiService.getAuthHeader(),
       );
 
       if (res.statusCode == 200) {
@@ -46,8 +43,7 @@ class _AdminUserState extends State<AdminUser> {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await ApiService.clearAuthData();
     if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
@@ -55,7 +51,7 @@ class _AdminUserState extends State<AdminUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Management'),
+        title: const Text('User Management'),backgroundColor: Colors.orange
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

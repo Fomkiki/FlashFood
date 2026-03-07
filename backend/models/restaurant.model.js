@@ -44,7 +44,7 @@ export const updateRestaurant = async (id, data) => {
 }
 
 export const getRestaurantsForUsers = async () => {
-    const sql = "SELECT id, name_res, open_time, close_time, zone, phone, address, img_url, status_reg FROM restaurant WHERE status_reg = ?";
+    const sql = "SELECT id, name_res, open_time, close_time, zone, phone, address, img_url, status_reg, status_res FROM restaurant WHERE status_reg = ?";
     const [rows] = await db.query(sql, ['success']);
     return rows;
 };

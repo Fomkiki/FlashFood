@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frontend/services/api_service.dart';
 import 'package:http/http.dart' as http;
 
 class AdminRestaurantStatus extends StatefulWidget {
@@ -22,12 +22,9 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
 
   Future<void> fetchAllRestaurants() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-
       final res = await http.get(
         Uri.parse("http://localhost:5000/api/restaurant/admin/all"),
-        headers: {"Authorization": "Bearer $token"},
+        headers: await ApiService.getAuthHeader(),
       );
 
       if (res.statusCode == 200) {
@@ -51,15 +48,9 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
 
   Future<void> updateRestaurantStatus(int id, String newStatus) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-
       final res = await http.put(
         Uri.parse("http://localhost:5000/api/restaurant/admin/$id/status"),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
+        headers: await ApiService.getAuthHeader(),
         body: jsonEncode({
           "status": newStatus,
         }),
@@ -79,43 +70,6 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
     }
   }
 
-  void showStatusDialog(int restaurantId, String currentStatus) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Change Restaurant Status'),
-        content: const Text('Select new status:'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              updateRestaurantStatus(restaurantId, 'waiting_approve');
-              Navigator.pop(context);
-            },
-            child: const Text('Pending'),
-          ),
-          TextButton(
-            onPressed: () {
-              updateRestaurantStatus(restaurantId, 'success');
-              Navigator.pop(context);
-            },
-            child: const Text('Approved'),
-          ),
-          TextButton(
-            onPressed: () {
-              updateRestaurantStatus(restaurantId, 'not_approve');
-              Navigator.pop(context);
-            },
-            child: const Text('Rejected'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Color getStatusColor(String status) {
     switch (status) {
       case 'success':
@@ -133,7 +87,7 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Restaurant Management'),
+        title: const Text('Restaurant Management'),backgroundColor: Colors.orange
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -186,9 +140,9 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
                                 const SizedBox(width: 10),
                                 ElevatedButton(
                                   onPressed: () {
-                                    showStatusDialog(restaurant['id'], restaurant['status_reg']);
+                                    updateRestaurantStatus(restaurant['id'], 'success');
                                   },
-                                  child: const Text('Edit'),
+                                  child: const Text('Approve'),
                                 ),
                               ],
                             ),
