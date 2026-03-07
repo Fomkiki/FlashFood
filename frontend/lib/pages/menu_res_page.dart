@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/edit_menu_page.dart';
 import 'package:frontend/services/menu_service.dart';
 
 class MenuResPage extends StatefulWidget {
@@ -20,7 +21,10 @@ class _MenuResPageState extends State<MenuResPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Menu of Restaurant')),
+      appBar: AppBar(
+        title: const Text('Menu of Restaurant'),
+        backgroundColor: Colors.orange,
+      ),
       body: FutureBuilder<List<dynamic>>(
         future: menus,
         builder: (context, snapshot) {
@@ -36,7 +40,7 @@ class _MenuResPageState extends State<MenuResPage> {
             itemCount: menus.length,
             itemBuilder: (context, index) {
               final res = menus[index];
-              const String baseImageUrl = "http://localhost:5000/";
+              const String baseImageUrl = "http://10.0.2.2:5000/";
               final String imagePath = res['img_url'].replaceAll("\\", "/");
               final String fullImageUrl = baseImageUrl + imagePath;
               return Card(
@@ -49,7 +53,14 @@ class _MenuResPageState extends State<MenuResPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Placeholder()),
+                      MaterialPageRoute(
+                        builder: (context) => EditMenuPage(
+                          idRes: res['id_res'],
+                          idMenu: res['id'],
+                          menu: res,
+                          fullImageUrl: fullImageUrl,
+                        ),
+                      ),
                     );
                   },
                   child: Row(

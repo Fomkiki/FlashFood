@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/pages/add_menu_page.dart';
 import 'package:frontend/pages/edit_res_page.dart';
 import 'package:frontend/pages/menu_res_page.dart';
+import 'package:frontend/pages/res_orders_page.dart';
 
 class MainResPage extends StatefulWidget {
   final Map<String, dynamic> restaurant;
@@ -23,15 +24,17 @@ class _MainResPageState extends State<MainResPage> {
   Widget build(BuildContext context) {
     final pages = [
       EditResPage(restaurant: widget.restaurant, ImgUrl: widget.ImgUrl),
-      const Placeholder(),
+      ResOrdersPage(id_res: widget.restaurant['id']),
       AddMenuPage(id_res: widget.restaurant['id']),
       MenuResPage(id_res: widget.restaurant['id']),
     ];
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.orange,
+        selectedItemColor: const Color.fromARGB(255, 255, 255, 255),
+        unselectedItemColor: const Color.fromARGB(255, 180, 180, 180),
         currentIndex: currentIndex,
         onTap: (index) {
           setState(() => currentIndex = index);

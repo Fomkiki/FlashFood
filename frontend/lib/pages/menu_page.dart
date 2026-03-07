@@ -29,7 +29,7 @@ class _MenuPageState extends State<MenuPage> {
       final restaurantId = widget.restaurant['id'];
 
       final res = await http.get(
-        Uri.parse("http://localhost:5000/api/menu?id_restaurant=$restaurantId"),
+        Uri.parse("http://10.0.2.2:5000/api/menu?id_restaurant=$restaurantId"),
         headers: {"Authorization": "Bearer $token"},
       );
 
@@ -51,18 +51,13 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppBar(
-      title: Text(widget.restaurant['name_res'] ?? 'Menu'),
-    ),
-    body: const Center(
-      child: Text(
-        'test',
-        style: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
+      appBar: AppBar(title: Text(widget.restaurant['name_res'] ?? 'Menu')),
+      body: const Center(
+        child: Text(
+          'test',
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
       ),
-    ),
-  );
+    );
   }
 }

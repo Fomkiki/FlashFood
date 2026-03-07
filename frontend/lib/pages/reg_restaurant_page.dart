@@ -81,7 +81,10 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register Restaurant')),
+      appBar: AppBar(
+        title: const Text('Register Restaurant'),
+        backgroundColor: Colors.orange,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -147,7 +150,7 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
               const SizedBox(height: 16),
 
               DropdownButtonFormField<String>(
-                value: selectedStatus,
+                initialValue: selectedStatus,
                 decoration: const InputDecoration(
                   labelText: 'status of Restaurant',
                   border: OutlineInputBorder(),
@@ -166,9 +169,6 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
 
               ElevatedButton(
                 onPressed: isLoading ? null : submitForm,
-                child: isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Submit'),
                 style: ElevatedButton.styleFrom(
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -176,6 +176,9 @@ class _RegRestaurantPageState extends State<RegRestaurantPage> {
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                 ),
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Submit'),
               ),
             ],
           ),

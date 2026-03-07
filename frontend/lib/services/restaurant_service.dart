@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RestaurantService {
-  final String baseUrl = 'http://localhost:5000/api/restaurant';
+  final String baseUrl = 'http://10.0.2.2:5000/api/restaurant';
 
   Future<bool> registerRestaurant(
     Map<String, String> fields,
@@ -45,7 +45,7 @@ class RestaurantService {
     final token = prefs.getString('token');
 
     final res = await http.get(
-      Uri.parse("$baseUrl"),
+      Uri.parse(baseUrl),
       headers: {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
@@ -60,14 +60,14 @@ class RestaurantService {
   }
 
   Future<bool> updateRestaurant(
-    int id_res,
+    int idRes,
     Map<String, String> fields,
     Uint8List? imageBytes,
   ) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
-    var uri = Uri.parse("$baseUrl/$id_res");
+    var uri = Uri.parse("$baseUrl/$idRes");
     print("URL: $uri");
     var request = http.MultipartRequest("PUT", uri);
 
@@ -95,12 +95,12 @@ class RestaurantService {
     }
   }
 
-  Future<Map<String, dynamic>> getRestaurants(int id_res) async {
+  Future<Map<String, dynamic>> getRestaurants(int idRes) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
     final res = await http.get(
-      Uri.parse("$baseUrl/$id_res"),
+      Uri.parse("$baseUrl/$idRes"),
       headers: {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",

@@ -35,19 +35,23 @@ class _EditResPageState extends State<EditResPage> {
 
     setState(() {
       newRestaurant = Map.from(newData);
-      const String baseImageUrl = "http://localhost:5000/";
+      const String baseImageUrl = "http://10.0.2.2:5000/";
       final String imagePath = newRestaurant['img_url'].replaceAll("\\", "/");
       newImgUrl = baseImageUrl + imagePath;
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Restaurant')),
+      appBar: AppBar(
+        title: const Text('Edit Restaurant'),
+        backgroundColor: Colors.orange,
+      ),
       body: Center(
         child: Container(
-          width: 300,
-          height: 500,
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -62,12 +66,13 @@ class _EditResPageState extends State<EditResPage> {
           alignment: Alignment.center,
           padding: const EdgeInsets.all(16),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Container(
-                  width: 200,
-                  height: 200,
+                  width: 300,
+                  height: 300,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
@@ -78,46 +83,46 @@ class _EditResPageState extends State<EditResPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 18),
               Center(
                 child: Text(
                   newRestaurant['name_res'],
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               Text(
                 "Address: ${newRestaurant['address']}",
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
+                style: const TextStyle(fontSize: 20, color: Colors.grey),
                 textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               Text(
                 "Phone: ${newRestaurant['phone']}",
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
+                style: const TextStyle(fontSize: 20, color: Colors.grey),
                 textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               Text(
                 "Opening : ${newRestaurant['open_time']}-${newRestaurant['close_time']}",
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
+                style: const TextStyle(fontSize: 20, color: Colors.grey),
                 textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               Text(
                 "status: ${newRestaurant['status_res']}",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   color: newRestaurant['status_res'] == 'open'
                       ? Colors.green
                       : Colors.red,
                 ),
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: 24),
 
               Center(
                 child: ElevatedButton(
@@ -197,6 +202,7 @@ class _EditCardState extends State<EditCard> {
     close_timeController = TextEditingController(
       text: widget.restaurant['close_time'],
     );
+    selectedStatus = widget.restaurant['status_res'];
   }
 
   Future<void> pickImage() async {
@@ -241,6 +247,7 @@ class _EditCardState extends State<EditCard> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
@@ -292,7 +299,7 @@ class _EditCardState extends State<EditCard> {
             ),
             SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: selectedStatus,
+              initialValue: selectedStatus,
               decoration: InputDecoration(
                 labelText: "Status of Restaurant",
                 border: const OutlineInputBorder(),

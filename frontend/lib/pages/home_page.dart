@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchRestaurants() async {
     try {
       final res = await http.get(
-        Uri.parse("http://localhost:5000/api/restaurant/user/all"),
+        Uri.parse("http://10.0.2.2:5000/api/restaurant/user/all"),
       );
 
       if (res.statusCode == 200) {
@@ -58,8 +58,9 @@ class _HomePageState extends State<HomePage> {
         filteredRestaurants = restaurants;
       } else {
         filteredRestaurants = restaurants
-            .where((res) =>
-                res['name_res'].toString().toLowerCase().contains(query))
+            .where(
+              (res) => res['name_res'].toString().toLowerCase().contains(query),
+            )
             .toList();
       }
     });
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(title: const Text('Home'), backgroundColor: Colors.orange),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
@@ -84,8 +85,9 @@ class _HomePageState extends State<HomePage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
                     ),
                   ),
                 ),
@@ -175,8 +177,11 @@ class RestaurantCard extends StatelessWidget {
                     // Zone
                     Row(
                       children: [
-                        const Icon(Icons.location_on,
-                            size: 14, color: Colors.grey),
+                        const Icon(
+                          Icons.location_on,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           restaurant['zone'] ?? 'N/A',
@@ -191,8 +196,11 @@ class RestaurantCard extends StatelessWidget {
                     // Open/Close Time
                     Row(
                       children: [
-                        const Icon(Icons.access_time,
-                            size: 14, color: Colors.blue),
+                        const Icon(
+                          Icons.access_time,
+                          size: 14,
+                          color: Colors.blue,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${restaurant['open_time'] ?? 'N/A'} - ${restaurant['close_time'] ?? 'N/A'}',
@@ -204,10 +212,7 @@ class RestaurantCard extends StatelessWidget {
                 ),
               ),
               // Arrow Icon
-              const Icon(
-                Icons.arrow_forward,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.arrow_forward, color: Colors.grey),
             ],
           ),
         ),

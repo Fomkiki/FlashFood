@@ -24,14 +24,15 @@ async function checkOwner(id_res, id_users){
 
 export const updateMenu = async(data) => {
 
-    const {id_res , menuId, name_menu, price, note , category, img_url  } = data;
+    const {id_res , menuId, name_menu, price, note , category, img_url , status_menu } = data;
     const sql = `UPDATE menu SET name_menu = COALESCE(?, name_menu), 
                 price = COALESCE(?, price), 
                 note = COALESCE(?, note), 
                 category = COALESCE(?, category), 
-                img_url = COALESCE(?, img_url) 
+                img_url = COALESCE(?, img_url) ,
+                status_menu = COALESCE(?, status_menu)
                 WHERE id = ? AND id_res = ?`;
-    const [result] = await db.query(sql,[name_menu, price, note , category, img_url , menuId, id_res]);
+    const [result] = await db.query(sql,[name_menu, price, note , category, img_url , status_menu , menuId, id_res ]);
     return result;
 }
 
@@ -39,4 +40,10 @@ export const getAllMenu = async(id_res) => {
     const sql = "SELECT * FROM menu WHERE id_res = ?";
     const [rows] = await db.query(sql, [id_res]);
     return rows;
+}
+
+export const getMenuById = async(id_res, id_menu) => {
+    const sql = "SELECT * FROM menu WHERE id = ? AND id_res = ?";
+    const [rows] = await db.query(sql, [id_menu, id_res]);
+    return rows[0];
 }

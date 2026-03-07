@@ -81,11 +81,14 @@ class _AddMenuPageState extends State<AddMenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Menu')),
+      appBar: AppBar(
+        title: const Text('Add Menu'),
+        backgroundColor: Colors.orange,
+      ),
       body: Center(
         child: Container(
-          width: 300,
-          height: 500,
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -100,6 +103,7 @@ class _AddMenuPageState extends State<AddMenuPage> {
           alignment: Alignment.center,
           padding: const EdgeInsets.all(16),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 12),
               Expanded(
@@ -117,7 +121,7 @@ class _AddMenuPageState extends State<AddMenuPage> {
                   ),
                 ),
                 child: const Text(
-                  'Update Image',
+                  'Select Image',
                   style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 ),
               ),
@@ -139,7 +143,7 @@ class _AddMenuPageState extends State<AddMenuPage> {
               ),
               SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: categoryMenu,
+                initialValue: categoryMenu,
                 decoration: const InputDecoration(labelText: 'Category Menu'),
                 items: categories
                     .map(

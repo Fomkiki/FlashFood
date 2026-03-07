@@ -29,11 +29,14 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(
+        title: const Text('Register'),
+        backgroundColor: Colors.orange,
+      ),
       body: Center(
         child: Container(
-          width: 400,
-          height: 700,
+          width: double.infinity,
+          height: double.infinity,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 255, 255, 255),
@@ -47,6 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 24),
               Text(
@@ -130,7 +134,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     Navigator.pushReplacementNamed(context, '/login');
                   }
                 },
-                child: Text("Register"),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(50),
                   backgroundColor: const Color(0xFF4A90E2),
@@ -141,6 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
+                child: Text("Register"),
               ),
             ],
           ),

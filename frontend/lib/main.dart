@@ -6,7 +6,7 @@ import 'screens/login_page.dart';
 import 'pages/test_page.dart';
 import 'pages/reg_restaurant_page.dart';
 import 'screens/owner_res_page.dart';
-import 'pages/edit_res_page.dart';
+import 'screens/check_auth_page.dart';
 import 'pages/admin_controller.dart';
 
 void main() {
@@ -20,9 +20,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      initialRoute: '/check_auth',
       routes: {
         '/login': (context) => LoginPage(),
+        '/check_auth': (context) => const CheckAuthPage(),
         '/register': (context) => RegisterPage(),
         '/main': (context) => const MainPage(),
         '/admin': (context) => const AdminController(),
@@ -33,3 +34,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/*"front": "cd frontend && flutter run -d chrome",*/

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/orders_model.dart';
+import 'package:frontend/pages/cart_page.dart';
+import 'package:frontend/pages/my_orders_page.dart';
 import 'package:frontend/pages/reg_restaurant_page.dart';
 
 import 'profile_page.dart';
@@ -16,9 +19,10 @@ class _MainPageState extends State<MainPage> {
 
   final pages = [
     const HomePage(),
+    const CartPage(),
+    const MyOrdersPage(),
     const ProfilePage(),
     const RegRestaurantPage(),
-    const Placeholder(),
   ];
 
   @override
@@ -26,14 +30,24 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.orange,
+        selectedItemColor: const Color.fromARGB(255, 255, 255, 255),
+        unselectedItemColor: const Color.fromARGB(255, 180, 180, 180),
         currentIndex: currentIndex,
         onTap: (index) {
           setState(() => currentIndex = index);
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: 'cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history_outlined),
+            label: 'my orders',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_2_outlined),
             label: 'Profile',

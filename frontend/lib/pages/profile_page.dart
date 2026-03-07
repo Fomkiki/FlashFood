@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final token = prefs.getString('token');
 
     final res = await http.get(
-      Uri.parse("http://localhost:5000/api/auth/me"),
+      Uri.parse("http://10.0.2.2:5000/api/auth/me"),
       headers: {"Authorization": "Bearer $token"},
     );
 
@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final token = prefs.getString('token');
 
       final res = await http.put(
-        Uri.parse("http://localhost:5000/api/auth/update"),
+        Uri.parse("http://10.0.2.2:5000/api/auth/update"),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -192,7 +192,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: Colors.orange,
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -274,7 +277,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/owner_res');
                   },
-                  child: const Text('My Restaurants'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange[800],
                     foregroundColor: Colors.white,
@@ -286,6 +288,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
+                  child: const Text('My Restaurants'),
                 ),
                 SizedBox(height: 15),
               ],

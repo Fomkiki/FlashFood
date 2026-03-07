@@ -5,6 +5,7 @@ import resterantRouter from "./routes/restaurant.routes.js";
 import cookieParser from "cookie-parser";
 import menuRouter from "./routes/menu.routes.js";
 import cartRouter from "./routes/cart.route.js";
+import ordersRouter from "./routes/orders.routes.js";
 import db from "./config/db.js";
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/restaurant", resterantRouter);
 app.use("/api", menuRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/orders", ordersRouter);
 
 
 

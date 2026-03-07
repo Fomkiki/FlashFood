@@ -17,7 +17,7 @@ export const getUserByEmail = async(email) => {
 
 export const getUserById = async(id) => {
     const sql = "SELECT id, username, email, phone, address, role FROM users WHERE id = ?";
-    const [row] = await db.query(sql, [id]);
+    const [row] = await db.query(sql, id);
     return row;
 }
 

@@ -36,8 +36,8 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Center(
         child: Container(
-          width: 300,
-          height: 500,
+          width: double.infinity,
+          height: double.infinity,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 255, 255, 255),
@@ -51,13 +51,14 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 24),
+              SizedBox(height: 30),
               Text(
                 'Login',
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 50),
               TextField(
                 controller: emailCtrl,
                 decoration: InputDecoration(
@@ -68,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                   prefixIcon: Icon(Icons.email),
                 ),
               ),
-              SizedBox(height: 24),
+              SizedBox(height: 30),
               TextField(
                 obscureText: obscurePassword,
                 controller: passwordCtrl,
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                   prefixIcon: Icon(Icons.lock),
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -92,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 24),
+              SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () async {
                   final data = {
@@ -102,16 +103,15 @@ class _LoginPageState extends State<LoginPage> {
 
                   final res = await authService.login(data);
 
-                  if (res != null && res.containsKey("token")) {
+                  if (res.containsKey("token")) {
                     final String token = res["token"];
 
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setString("token", token);
 
-                    // Get user info to check role
                     try {
                       final userRes = await http.get(
-                        Uri.parse("http://localhost:5000/api/auth/me"),
+                        Uri.parse("http://10.0.2.2:5000/api/auth/me"),
                         headers: {"Authorization": "Bearer $token"},
                       );
 
@@ -135,7 +135,6 @@ class _LoginPageState extends State<LoginPage> {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 },
-                child: isLoading ? CircularProgressIndicator() : Text("Login"),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(50),
                   backgroundColor: const Color(0xFF4A90E2),
@@ -146,6 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
+                child: isLoading ? CircularProgressIndicator() : Text("Login"),
               ),
             ],
           ),

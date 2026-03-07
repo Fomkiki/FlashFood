@@ -47,3 +47,16 @@ export const getAllMenu = async (req,res) => {
         res.status(500).json({message: err.message});
     }
 }
+
+
+export const getMenuById = async (req,res) => {
+    try{
+        const { id_res , id_menu } = req.params;
+        const menu = await menuModel.getMenuById(id_res, id_menu);
+
+        res.status(200).json({ menu });
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+}

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "front": "cd frontend && flutter run -d chrome",
+   
+    "front": "cd frontend && flutter run -d emulator-5554",
     "back": "cd backend && npm run dev",
     "dev": "concurrently \"npm run back\" \"npm run front\""
   },
@@ -15,3 +16,5 @@
     "concurrently": "^9.2.1"
   }
 }
+
+

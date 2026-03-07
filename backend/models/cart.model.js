@@ -46,7 +46,74 @@ export const addCartItem = async (data) => {
 export const getCartItems = async (id_users) => {
   const [cart] = await db.query("SELECT * FROM cart WHERE id_users = ? AND status = ? LIMIT 1",[id_users, "active"]);
   if(cart.length === 0) throw new Error("Cart not found");
-  const [cartItems] = await db.query("SELECT id_menu, name_menu , price , amount , total_price FROM cart_items JOIN menu ON cart_items.id_menu = menu.id WHERE id_cart = ?",[cart[0].id]);
+  const [cartItems] = await db.query("SELECT id_menu, name_menu , price , amount , (amount * price) as total , img_url FROM cart_items JOIN menu ON cart_items.id_menu = menu.id WHERE id_cart = ?",[cart[0].id]);
   return cartItems;
   
 }
+
+export const updateCartItem = async (data) => {
+  const { id_menu, amount } = data;
+  if (!amount || amount <= 0) {
+    throw new Error("Invalid amount");
+  }
+  const [menuRows] = await db.query("SELECT * FROM menu WHERE id = ?",[id_menu]);
+  if (menuRows.length === 0) {
+    throw new Error("Menu item not found");
+  }
+  const { price } = menuRows[0];
+  const newAmount = amount;
+  const newTotal = newAmount * price;
+  const [result] = await db.query("UPDATE cart_items SET amount = ?, total_price = ? WHERE id_menu = ?",[newAmount, newTotal, id_menu]);
+  return result;
+}
+
+
+export const deleteCartItem = async (data) => {
+  const { id_menu } = data;
+  const [result] = await db.query("DELETE FROM cart_items WHERE id_menu = ?",[id_menu]);
+  return result;
+}
+
+export const checkoutCart = async (id_users) => {
+
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    const [cart] = await conn.query(
+      "SELECT * FROM cart WHERE id_users = ? AND status = 'active' LIMIT 1",
+      [id_users]
+    );
+    if (cart.length === 0) {
+      throw new Error("Cart not found");
+    }
+
+    const cartId = cart[0].id;
+    const [items] = await conn.query("SELECT * FROM cart_items WHERE id_cart = ?",[cartId]);
+    if (items.length === 0) {
+      throw new Error("Cart is empty");
+    }
+
+    const total_price = items.reduce((sum, item) => {
+      return sum + Number(item.total_price);
+    }, 0);
+
+    const id_res = items[0].id_res;
+    const sql = "INSERT INTO orders (id_users,id_res,status,total_price,payment_status)VALUES (?, ?, 'pending', ?, 'unpaid')";
+    const [order] = await conn.query(sql, [id_users, id_res, total_price]);
+    const order_id = order.insertId;
+
+    await conn.query("INSERT INTO order_items (id_order,id_menu,amount,price_per_item,total_price)SELECT ?, id_menu, amount, price_per_item, total_price FROM cart_items WHERE id_cart = ?",[order_id, cartId]);
+
+    await conn.query("UPDATE cart SET status = 'checkout' WHERE id = ?",[cartId]);
+
+    await conn.commit();
+    return { order_id };
+  } catch (error) {
+
+    await conn.rollback();
+    throw error;
+
+  } finally {
+    conn.release();
+  }
+};

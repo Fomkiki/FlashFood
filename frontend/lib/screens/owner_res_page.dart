@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/main_res_page.dart';
-import 'package:frontend/pages/profile_page.dart';
 import '../services/restaurant_service.dart';
 
 class OwnerResPage extends StatefulWidget {
@@ -28,7 +27,10 @@ class _OwnerResPageState extends State<OwnerResPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("My Restaurants")),
+      appBar: AppBar(
+        title: const Text("My Restaurants"),
+        backgroundColor: Colors.orange,
+      ),
       body: FutureBuilder<List<dynamic>>(
         future: Restaurants,
         builder: (context, snapshot) {
@@ -46,7 +48,7 @@ class _OwnerResPageState extends State<OwnerResPage> {
             itemCount: restaurants.length,
             itemBuilder: (context, index) {
               final res = restaurants[index];
-              const String baseImageUrl = "http://localhost:5000/";
+              const String baseImageUrl = "http://10.0.2.2:5000/";
               final String imagePath = res['img_url'].replaceAll("\\", "/");
               final String fullImageUrl = baseImageUrl + imagePath;
 
