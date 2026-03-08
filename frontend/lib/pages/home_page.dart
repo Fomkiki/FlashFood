@@ -54,25 +54,15 @@ class _HomePageState extends State<HomePage> {
 
   void _filterRestaurants() {
     final query = searchController.text.toLowerCase();
+    final filtered = restaurants.where((res) {
+      final name = (res['name_res'] ?? '').toString().toLowerCase();
+      final matchesSearch = query.isEmpty || name.contains(query);
+      final matchesStatus = showAll || res['status_res'] == 'open';
+
+      return matchesSearch && matchesStatus;
+    }).toList();
+
     setState(() {
-      var filtered = restaurants;
-
-      // Filter by status_res if showAll is false
-      if (!showAll) {
-        filtered = filtered
-            .where((res) => res['status_res'] == 'open')
-            .toList();
-      }
-
-      // Filter by search query
-      if (query.isNotEmpty) {
-        filtered = filtered
-            .where(
-              (res) => res['name_res'].toString().toLowerCase().contains(query),
-            )
-            .toList();
-      }
-
       filteredRestaurants = filtered;
     });
   }
