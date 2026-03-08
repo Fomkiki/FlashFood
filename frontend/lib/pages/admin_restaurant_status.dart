@@ -23,7 +23,7 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
   Future<void> fetchAllRestaurants() async {
     try {
       final res = await http.get(
-        Uri.parse("http://localhost:5000/api/restaurant/admin/all"),
+        Uri.parse("http://10.0.2.2:5000/api/restaurant/admin/all"),
         headers: await ApiService.getAuthHeader(),
       );
 
@@ -49,7 +49,7 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
   Future<void> updateRestaurantStatus(int id, String newStatus) async {
     try {
       final res = await http.put(
-        Uri.parse("http://localhost:5000/api/restaurant/admin/$id/status"),
+        Uri.parse("http://10.0.2.2:5000/api/restaurant/admin/$id/status"),
         headers: await ApiService.getAuthHeader(),
         body: jsonEncode({
           "status": newStatus,
@@ -114,7 +114,7 @@ class _AdminRestaurantStatusState extends State<AdminRestaurantStatus> {
                                     height: 100,
                                     width: 100,
                                     child: Image.network(
-                                      "http://localhost:5000/${restaurant['img_url']}",
+                                      "http://10.0.2.2:5000/${restaurant['img_url']}",
                                       fit: BoxFit.contain,
                                       errorBuilder: (context, error, stackTrace) =>
                                           const Center(child: Text('Image -')),

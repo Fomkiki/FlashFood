@@ -57,7 +57,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
     try {
       final headers = await ApiService.getAuthHeader();
       final response = await http.post(
-        Uri.parse('http://localhost:5000/api/cart/add/$menuId'),
+        Uri.parse('http://10.0.2.2:5000/api/cart/add/$menuId'),
         headers: headers,
         body: jsonEncode({'amount': amount}),
       );
@@ -109,7 +109,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          "http://localhost:5000/${(widget.menu['img_url'] ?? '').toString().replaceAll("\\", "/")}",
+                          "http://10.0.2.2:5000/${(widget.menu['img_url'] ?? '').toString().replaceAll("\\", "/")}",
                           width: double.infinity,
                           height: 300,
                           fit: BoxFit.contain,

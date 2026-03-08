@@ -157,7 +157,7 @@ class _MenuPageState extends State<MenuPage> {
                         itemCount: filteredMenus.length,
                         itemBuilder: (context, index) {
                           final res = filteredMenus[index];
-                          const String baseImageUrl = "http://localhost:5000/";
+                          const String baseImageUrl = "http://10.0.2.2:5000/";
                           final String imagePath = res['img_url'].replaceAll(
                             "\\",
                             "/",

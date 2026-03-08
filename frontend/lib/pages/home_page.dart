@@ -170,7 +170,7 @@ class RestaurantCard extends StatelessWidget {
                   color: Colors.grey[300],
                   child: restaurant['img_url'] != null
                       ? Image.network(
-                          'http://localhost:5000/${restaurant['img_url']}'
+                          'http://10.0.2.2:5000/${restaurant['img_url']}'
                               .replaceAll('\\', '/'),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {

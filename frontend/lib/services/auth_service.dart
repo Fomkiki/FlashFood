@@ -45,7 +45,7 @@ class AuthService {
 }
 
 Future<Map<String, dynamic>> getUserData(String token) async {
-  final url = Uri.parse("http://localhost:5000/api/auth/me");
+  final url = Uri.parse("http://10.0.2.2:5000/api/auth/me");
 
   final response = await http.get(
     url,
