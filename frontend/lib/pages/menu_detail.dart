@@ -44,9 +44,9 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
         : int.tryParse(menuIdRaw?.toString() ?? '');
 
     if (menuId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid menu id')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Invalid menu id')));
       return;
     }
 
@@ -57,7 +57,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
     try {
       final headers = await ApiService.getAuthHeader();
       final response = await http.post(
-        Uri.parse('http://localhost:5000/api/cart/add/$menuId'),
+        Uri.parse('http://10.0.2.2:5000/api/cart/add/$menuId'),
         headers: headers,
         body: jsonEncode({'amount': amount}),
       );
@@ -72,9 +72,9 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
       }
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Added $amount item(s) to cart')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Added $amount item(s) to cart')));
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,7 +93,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.menu['name_menu'] ?? 'Menu Detail'),backgroundColor: Colors.orange
+        title: Text(widget.menu['name_menu'] ?? 'Menu Detail'),
+        backgroundColor: Colors.orange,
       ),
       body: SafeArea(
         child: Column(
@@ -109,7 +110,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          "http://localhost:5000/${(widget.menu['img_url'] ?? '').toString().replaceAll("\\", "/")}",
+                          "http://10.0.2.2:5000/${(widget.menu['img_url'] ?? '').toString().replaceAll("\\", "/")}",
                           width: double.infinity,
                           height: 300,
                           fit: BoxFit.contain,
@@ -135,10 +136,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                     // Note
                     Text(
                       'Note: ${widget.menu['note'] ?? 'N/A'}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 8),
                     // Status
@@ -146,8 +144,8 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                       widget.menu['status_menu'] == 'on_sale'
                           ? 'On sale'
                           : widget.menu['status_menu'] == 'soldout'
-                              ? 'Sold out'
-                              : 'N/A',
+                          ? 'Sold out'
+                          : 'N/A',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

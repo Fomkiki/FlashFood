@@ -70,12 +70,10 @@ class _MenuPageState extends State<MenuPage> {
             final matchesStatus =
                 showAllMenu || menu['status_menu'] == 'on_sale';
 
-            // Category filter
             final menuCategory = (menu['category'] ?? '').toString();
             final matchesCategory =
                 selectedCategory == null || menuCategory == selectedCategory;
 
-            // Price filter
             final price =
                 double.tryParse(menu['price']?.toString() ?? '0') ?? 0;
             final matchesMinPrice = minPrice == null || price >= minPrice;
@@ -157,7 +155,7 @@ class _MenuPageState extends State<MenuPage> {
                         itemCount: filteredMenus.length,
                         itemBuilder: (context, index) {
                           final res = filteredMenus[index];
-                          const String baseImageUrl = "http://localhost:5000/";
+                          const String baseImageUrl = "http://10.0.2.2:5000/";
                           final String imagePath = res['img_url'].replaceAll(
                             "\\",
                             "/",
