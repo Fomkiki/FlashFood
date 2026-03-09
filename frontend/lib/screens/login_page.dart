@@ -118,6 +118,9 @@ class _LoginPageState extends State<LoginPage> {
                       if (userRes.statusCode == 200) {
                         final userData = jsonDecode(userRes.body);
                         final userRole = userData["user"][0]["role"];
+                        
+                        // Save user role to SharedPreferences
+                        await prefs.setString("userRole", userRole);
 
                         if (userRole == 'admin') {
                           Navigator.pushReplacementNamed(context, "/admin");

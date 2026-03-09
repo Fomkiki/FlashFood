@@ -23,7 +23,7 @@ class _AdminUserState extends State<AdminUser> {
   Future<void> fetchUsers() async {
     try {
       final res = await http.get(
-        Uri.parse('http://localhost:5000/api/auth/admin/users'),
+        Uri.parse('http://10.0.2.2:5000/api/auth/admin/users'),
         headers: await ApiService.getAuthHeader(),
       );
 
